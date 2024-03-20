@@ -1,24 +1,14 @@
 const std = @import("std");
+const lexer = @import("./lexer.zig");
 
-const Token = union(enum) { EOF, EQUAL: u8 };
+pub fn main() void {
+    const buffer: []const u8 = "const x = 2;";
 
-fn matchToken(line: u8) ?Token {
-    return switch (line) {
-        'a'...'z' => .EOF,
-        '0'...'9' => .{ .EQUAL = 9 },
-        else => undefined,
-    };
-}
+    var lex = lexer.Lexer.init(buffer);
 
-pub fn main() !void {
-    var reader = std.io.getStdIn().reader();
+    while (lex.canRead()) {
+        const token = lex.matchToken();
 
-    var buffer: [1024]u8 = undefined;
-    while (try reader.readUntilDelimiterOrEof(&buffer, '\n')) |line| {
-        var token = matchToken(line[0]);
-
-        if (token) |t| {
-            std.debug.print("{?}\n", .{t});
-        }
+        std.debug.print("{}\n", .{token});
     }
 }
