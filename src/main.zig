@@ -12,3 +12,7 @@ pub fn main() void {
         std.debug.print("{}\n", .{token});
     }
 }
+
+test {
+    _ = @import("./lexer.zig");
+}
